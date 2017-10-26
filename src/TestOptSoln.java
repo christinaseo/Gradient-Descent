@@ -1,4 +1,5 @@
 import java.io.File;
+import poly.Term;
 
 import soln.opt.Minimizer;
 import soln.poly.Polynomial;
@@ -20,6 +21,7 @@ public class TestOptSoln {
 		// You must run more test cases than this!
 		RunMinimizer("files/poly1.txt", 0.001, 200, 0.10, "{ x=1.0 }");
 		RunMinimizer("files/poly2.txt", 0.001, 200, 0.10, "{ x=1.0 y=1.0 }");
+
 	}	
 
 	public static void RunMinimizer(String polyfile, double eps, int max_iter, double alpha, String sx0) 

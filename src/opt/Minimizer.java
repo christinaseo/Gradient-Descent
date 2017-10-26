@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 import poly.Polynomial;
+import poly.Term;
 import util.Vector;
 
 /** The main optimization package: see project handout for functionality and definitions
@@ -76,7 +77,9 @@ public class Minimizer {
 	public void minimize(Polynomial p) throws Exception {
 			
 		// TODO: Build the partial derivatives of p for all variables in p
-		
+                _var2gradp = new HashMap<>();
+                for (String s : p.getAllVars())
+                _var2gradp.put(s, p.differentiate(s));
 		// Start the gradient descent
 		_nIter = 0;
 		long start = System.currentTimeMillis();
@@ -98,6 +101,24 @@ public class Minimizer {
 		//      System.out.format("At iteration %d: %s objective value = %.3f\n", _nIter, _lastx, _lastObjVal);
 		//	}
 			
+                while (_nIter < _maxIter && _lastGradNorm > _eps){
+                    _nIter++;
+                    //compute grad and grad norm
+                    Vector gradient = new Vector();
+                    //for all polynomials in the hashmap, evaluate the gradient (partial derivative) given the assignment _x0? 
+                    
+                    for(String s : _var2gradp.keySet()) {
+                        gradient.set(s, _var2gradp.get(s).evaluate(_lastx));
+                    }
+                    _lastGradNorm = gradient.computeL2Norm();
+                    //	  compute new point by adding current point and the negation of the step size times the gradient\
+                    _lastx = _lastx.sum(gradient.scalarMult(-_stepSize));
+//                   for (String j : _lastx.getMap().keySet())
+//                    _lastx.getMap().get(j) = _lastx.getMap().get(j) + (gradient.getMap().get(j).evaluate(_lastx))*_stepSize;
+                    //	  evaluate the objective at the new point
+                    _lastObjVal = p.evaluate(_lastx);
+                    System.out.format("At iteration %d: %s objective value = %.3f\n", _nIter, _lastx, _lastObjVal);
+                }
 		// Record the end time
 		_compTime = System.currentTimeMillis()-start;
 	}

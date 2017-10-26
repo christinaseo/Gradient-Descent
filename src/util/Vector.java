@@ -20,36 +20,43 @@ public class Vector {
 	 * 
 	 */
 	public Vector() {
-		// TODO: this method should not be empty! 
-		// Hint: is there any memory you want to allocate?
+            _hmVar2Value = new HashMap<>();
 	}
 
 	/** Constructor that parses a String s like "{ x=-1 y=-2.0 z=3d }" into 
 	 *  the internal HashMap representation of the Vector.  See usage in main().
 	 * 
 	 * @param s
+         * @throws java.lang.Exception
 	 */
-	public Vector(String s) {
-		// TODO: this method should not be empty! 
-		// Hint: you're going to have use String.split covered in the File I/O lecture.
+	public Vector(String s) throws Exception {
+            _hmVar2Value = new HashMap<>();
+            String[] _mParts = s.split(" ");
+            for (int i = 1; i < _mParts.length -1; i++){ 
+                String[] _mParts1 = _mParts[i].split("=");
+                set(_mParts1[0],Double.parseDouble(_mParts1[1]));}                                 
+            //for (int i = 0; i < _mParts1.length; i+=2)
+               //set(_mParts1[i],Double.parseDouble(_mParts1[i+1]));
+            // or this.put(_mParts1[i],Double.parseDouble(_mParts1[i+1]));
+               //this.set(_mParts1[i], Double.parseDouble(_mParts1[i+1]));
 	}
 
 	/** Removes (clears) all (key,value) pairs from the Vector representation
 	 * 
 	 */
 	public void clear() {
-		// TODO: this method should not be empty! 
-		// Hint: look very carefully at the available methods of HashMap... this is a one liner!
+            _hmVar2Value.clear(); 
 	}
 
 	/** Sets a specific var to the value val in *this*, i.e., var=val
 	 * 
 	 * @param var - label of Vector index to change
 	 * @param val - value to change it to
+         * @throws java.lang.Exception
+         * @throws NullPointerException
 	 */
-	public void set(String var, double val) {
-		// TODO: this method should not be empty! 
-		// Hint: look very carefully at the available methods of HashMap... this is a one liner!
+	public void set(String var, double val) throws Exception  {
+            _hmVar2Value.put(var,val);
 	}
 
 	/** Sets all entries in *this* Vector to match entries in x
@@ -58,8 +65,87 @@ public class Vector {
 	 * @param x
 	 */
 	public void setAll(Vector x) {
-		// TODO: this method should not be empty! 
-		// Hint: look very carefully at the available methods of HashMap... this is a one liner!
+            _hmVar2Value.putAll(x._hmVar2Value);
+        }
+        
+        //tostring function
+        	/** Overrides method toString() on Object: converts the class to a human readable String
+	 * 
+	 *  Note 1: this is invoked *automatically* when the object is listed where a String is expected,
+	 *          e.g., "System.out.println(v);" is actually equivalent to "System.out.println(v.toString());"       
+	 *          
+	 *  Note 2: for debugging purposes, you should always define a toString() method on a class you define
+	 * @param var
+         * @param val
+         * @return
+         */
+        @Override
+	public String toString() {
+		// We could just repeatedly append to an existing String, but that copies the String each
+		// time, whereas a StringBuilder simply appends new characters to the end of the String
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+                for(String var:_hmVar2Value.keySet())
+                    sb.append(String.format(" %s=%6.4f", var, this._hmVar2Value.get(var))); 
+		sb.append(" }");
+		return sb.toString();
+	}
+        
+        //sum function
+        public Vector sum(Vector v) throws Exception {
+            Vector vec = new Vector();
+            for (String s : _hmVar2Value.keySet())
+             vec.set(s,_hmVar2Value.get(s) + v._hmVar2Value.get(s)); 
+            return vec;
+        }
+        //scalarmult function
+        /** This creates a new Vector, multiplies it by a scalar d, and returns it
+	 *  (should not modify *this*)
+	 * 
+	 * @param d
+	 * @return new Vector after scalar addition
+     * @throws java.lang.Exception
+	 */
+	public Vector scalarMult(double d) throws Exception {
+		Vector n = new Vector(); 
+                for (String s : _hmVar2Value.keySet())
+                    n.set(s, _hmVar2Value.get(s)*d);
+	return n;
+	}
+        //computeL2Norm function NEEDS TO BE FIXED!!! cant assume 3D/x,y,z is the largest case
+        public double computeL2Norm(){
+            double norm = 0;
+            for (String s : _hmVar2Value.keySet())
+                norm += _hmVar2Value.get(s) * _hmVar2Value.get(s);
+            //norm = Math.sqrt((_hmVar2Value.get("x"))*(_hmVar2Value.get("x")) + (_hmVar2Value.get("y"))*(_hmVar2Value.get("y")) + (_hmVar2Value.get("z"))*(_hmVar2Value.get("z")));
+            norm = Math.sqrt(norm);
+            return norm;
+        }
+        
+        //allow other classes to access the hashmap
+        public HashMap<String,Double> getMap(){
+            return _hmVar2Value;
+        }
+        
+        @Override // optional annotation to tell Java we expect this overrides a parent method -- compiler will warn if not
+	public boolean equals(Object o) {
+		if (o instanceof Vector) {
+			Vector v = (Vector)o; // This is called a cast (or downcast)... we can do it since we
+			if (v._hmVar2Value.size() != this._hmVar2Value.size())
+                            return false;
+                        //System.out.println(v);
+                        //System.out.println(this);
+			for (String index : this._hmVar2Value.keySet()) {
+                        if (!(v._hmVar2Value.containsKey(index))) 
+                            return false;
+			if (!(v._hmVar2Value.get(index).equals(this._hmVar2Value.get(index))))
+					return false; // If two Vectors mismatch at any index, they are not equal
+			
+                        }return true; // Everything matched... objects are equal!
+                        
+		}
+                else // if we get here "(o instanceof Vector)" was false
+			return false; // Two objects cannot be equal if they don't have the same class type
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
