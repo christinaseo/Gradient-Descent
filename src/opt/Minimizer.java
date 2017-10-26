@@ -76,8 +76,10 @@ public class Minimizer {
 	 */
 	public void minimize(Polynomial p) throws Exception {
 			
-		// TODO: Build the partial derivatives of p for all variables in p
+		//Build the partial derivatives of p for all variables in p
+		//Create a new instance of the hashmap
                 _var2gradp = new HashMap<>();
+		//For all the variables, differentiate the polynomial with respect to that variable
                 for (String s : p.getAllVars())
                 _var2gradp.put(s, p.differentiate(s));
 		// Start the gradient descent
@@ -105,16 +107,13 @@ public class Minimizer {
                     _nIter++;
                     //compute grad and grad norm
                     Vector gradient = new Vector();
-                    //for all polynomials in the hashmap, evaluate the gradient (partial derivative) given the assignment _x0? 
-                    
+                    //for all keys, evaluate using _lastx                 
                     for(String s : _var2gradp.keySet()) {
                         gradient.set(s, _var2gradp.get(s).evaluate(_lastx));
                     }
                     _lastGradNorm = gradient.computeL2Norm();
                     //	  compute new point by adding current point and the negation of the step size times the gradient\
                     _lastx = _lastx.sum(gradient.scalarMult(-_stepSize));
-//                   for (String j : _lastx.getMap().keySet())
-//                    _lastx.getMap().get(j) = _lastx.getMap().get(j) + (gradient.getMap().get(j).evaluate(_lastx))*_stepSize;
                     //	  evaluate the objective at the new point
                     _lastObjVal = p.evaluate(_lastx);
                     System.out.format("At iteration %d: %s objective value = %.3f\n", _nIter, _lastx, _lastObjVal);
