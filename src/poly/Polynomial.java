@@ -115,7 +115,7 @@ public class Polynomial {
 	 */
 	public double evaluate(Vector assignments) throws Exception {
             double answer = 0;
-            //answer = function with the assignments subbed in
+            //iterate through all the terms and add them to the double answer
             for (Term t : this._terms)
                 answer += t.evaluate(assignments);                                   
 	return answer;
@@ -136,6 +136,7 @@ public class Polynomial {
 	 */
 	public Polynomial differentiate(String var) throws Exception {
                 Polynomial newPoly = new Polynomial();
+		//Iterate through all the terms and differentiate them with respect to the variable
                 for(Term t: _terms){
                     Term dt = t.differentiate(var);
                     if(dt.getCoef()!=0.0d){
@@ -143,10 +144,6 @@ public class Polynomial {
                         
                     }
                 }
-                //for (int i = 0; i < this._terms.size(); i++)
-                    //for (int j = 0; j < _terms.get(i).sizeofVars(); j++) //doesnt like me adding in the extra for loop either
-                       //if (_terms.get(i).getVars(j).equals(var)) //error if (_terms.get(i).getVar(i).equals(var))                        
-                    //newPoly._terms.add(i,_terms.get(i).differentiate(var)); 
         return newPoly;
 	}
 
