@@ -112,12 +112,13 @@ public class Vector {
                     n.set(s, _hmVar2Value.get(s)*d);
 	return n;
 	}
-        //computeL2Norm function NEEDS TO BE FIXED!!! cant assume 3D/x,y,z is the largest case
+        //computeL2Norm function 
         public double computeL2Norm(){
             double norm = 0;
+		// for all variables in hmVar2Value, square it and add it to norm
             for (String s : _hmVar2Value.keySet())
                 norm += _hmVar2Value.get(s) * _hmVar2Value.get(s);
-            //norm = Math.sqrt((_hmVar2Value.get("x"))*(_hmVar2Value.get("x")) + (_hmVar2Value.get("y"))*(_hmVar2Value.get("y")) + (_hmVar2Value.get("z"))*(_hmVar2Value.get("z")));
+		//take the square root of the added values
             norm = Math.sqrt(norm);
             return norm;
         }
