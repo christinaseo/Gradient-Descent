@@ -109,6 +109,7 @@ public class Term {
 	//       the implementation of the methods below.
 	///////////////////////////////////////////////////////////////////////////////
         
+	//some functions to help call private members of Term in other classes
         public String getVars(int index) throws IndexOutOfBoundsException {
             return (this._vars.get(index));
         }
@@ -133,33 +134,22 @@ public class Term {
 	 */
 	public double evaluate(Vector assignments) throws PolyException {
             double answer = 0;
-            //iterate through all the variables
+            //if there are no variables, it means that the term is just the coefficient
             if (this.getAllVars().isEmpty()) {
-                            //System.out.println("no variables, coef = " + this.getCoef());
                             return this.getCoef();  
             }
+	    //iterate through the variables
             for (int i = 0; i < _vars.size(); i++){
-                //System.out.println("coef = " + this.getCoef());
+		//the first time the for loop runs, answer will be 0 so just make anwer equal to the number
                 if (answer == 0){
-                    //System.out.println("coef = " + this.getCoef());
-                    //if (assignments.getMap().get(_vars.get(i)) != 0)
-                        //if (this.getAllVars().isEmpty()) {
-                           // System.out.println("no variables, coef = " + this.getCoef());
-                           // return this.getCoef();    
-                        //}
-                        //System.out.println("variable " +assignments.getMap().get(_vars.get(i)));
-                        //System.out.println("power " + _pows.get(i));
-                        //System.out.println("multiplication " + Math.pow(assignments.getMap().get(_vars.get(i)), _pows.get(i)));
                         answer = Math.pow(assignments.getMap().get(_vars.get(i)), _pows.get(i));
-                        //System.out.println("answer " + answer);
                 }
-                else if(answer != 0)
-                    //if (assignments.getMap().get(_vars.get(i)) != 0)                        
+		//every other time the number should multiply the already existing answer
+                else if(answer != 0)                       
                         answer *= Math.pow(assignments.getMap().get(_vars.get(i)), _pows.get(i));  
-                        //System.out.println("answer for else " + answer);
             }
+	    //multiply the answer with the value of the coefficient
             answer *= _coef;  
-            //System.out.println("answer before exit " + answer);
 		return answer;
 	}
 
@@ -177,33 +167,25 @@ public class Term {
 	 */
 	public Term differentiate(String var) {
             Term tempTerm = new Term(this._coef);
-            
             //if the term has no variables in it it will be a constant
             if (this.getAllVars().isEmpty()) {
-                            //System.out.println("no variables, coef = " + this.getCoef());
-                            return new Term (0.0);  
+                 return new Term (0.0);  
             }
-            //System.out.println(this._vars.size());
 		for (int i = 0; i < this._vars.size(); i++) {
                     //if it does not contain the variable, the derivative would be 0 (treat it as a constant)
                     if (!(this._vars.contains(var)))
                         return new Term (0.0);
                     // If the variable in the term equals the parameter
                     if (this._vars.get(i).equals(var)){
-                        
-                        if (this._pows.get(i) != 1)
-                        {
-                           // System.out.println("aaa"+tempTerm._vars.size());
+                        //if the power is one, just don't add to the temp term (same as multiplying the term by 1)
+                        if (this._pows.get(i) != 1) {
                             tempTerm._pows.add( this._pows.get(i) - 1);
                             tempTerm._coef = _coef*this._pows.get(i);
                             tempTerm._vars.add( var);
-                            
-                        }
-                    }
-                    
+			}
+                    }   
                     //leave the other variables alone
                     else {
-
                         tempTerm._vars.add( this._vars.get(i));
                         tempTerm._pows.add( this._pows.get(i));
                      
