@@ -1,3 +1,3 @@
 # MIE250 Project 3
 
-Please see the assignment description posted on Blackboard for instructions.
+Third project done for MIE250 where we implemented gradient descent
